@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translations+ settings</title>
+    <style type="text/css">
+    body {
+        margin: 0;
+        padding-top:8px;
+        height: 100%;
+        background:#F5F5F5;
+        font-family:"Helvetica Neue", Helvetica, Verdana, Arial, sans-serif;
+    }
+    #main {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40%;
+        height: 100%;
+        background: #DDE4EA;
+        -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 2px;
+    }
+    #menu {
+        position: absolute;
+        right: 40px;
+        top: 150px;
+    }
+    #menu li {
+        display: block;
+        text-align: left;
+        list-style: none;
+        color: #BBB;
+        text-decoration: none;
+        line-height: 50px;
+        text-shadow: transparent 0px 0px 10px;
+        white-space: nowrap;
+        cursor: pointer;
+        -webkit-transition: all 0.25s linear;
+    }
+    #menu li.active, #menu li:hover {
+        color: #999;
+        text-shadow: rgba(255,255,255,1) 0px 0px 20px;
+    }
+    
+    #optionsContainer {
+        width: 500px;
+        position: absolute;
+        right: -520px;
+        top: 150px;
+    }
+    #advanced {
+        display: none;
+    }
+    #genius {
+        position: absolute;
+        display: block;
+        bottom: 5px;
+        right: -110px;
+        color: #999;
+        font-size:14px;
+    }
+    .option_row {
+        clear: left;
+        padding: 10px 2px;
+    }
+    .option_name,
+    .option_picker {
+        float: left;
+    }
+    </style>
+</head>
+<body>
+<div id="main">
+    <ul id="menu">
+    <li class="active" data-tab="general">General</li>
+    <li data-tab="advanced">Advanced</li>
+    </ul>
+    <div id="optionsContainer">
+    <div id="general">
+    <div class="option_row">
+        <div id="apiContainer">
+            <div class="option_name"> Api: </div>
+            <div class="option_picker">
+            <select id="api" multiple>
+                <option value="google">Google Translate</option>
+                <option value="dictCn">dictCN</option>
+            </select>
+            </div>
+        </div>
+        <div id="googleOptions">
+            From:
+            <select id="source">
+                <option value="detect">Detect Language</option>
+            </select>
+            To:
+            <select id="target">
+            </select>
+        </div>
+    </div>
+    <div class="option_row">
+        Dbclick:
+        <input type="checkbox" name="dbclick" id="dbclick"/>
+    </div>
+    <div class="option_row">
+        ShowIcon:
+        <input type="checkbox" name="showIcon" id="showIcon"/>
+    </div>
+    </div>
+    <div id="advanced">
+    <div class="option_row">
+        icon opacity:
+        <input type="range" name="iconOpacity" id="iconOpacity" min="0" max="10" step="1" value="1"/>
+    </div>
+    </div>
+    <div class="option_row">
+        <button id="save">Save</button>
+    </div>
+    </div>
+    <a id="genius" href="http://ilanceli.wordpress.com">made@Lance</a>
+</div>
+<script type="text/javascript">
+(function() {
+    var translati0n = {
+        menuDom: document.getElementById('menu'),
+        apiDom: document.getElementById('api'),
+        saveDom: document.getElementById('save'),
+        dbclickDom: document.getElementById('dbclick'),
+        googleOptionsDom: document.getElementById('googleOptions'),
+        sourceDom: document.getElementById('source'),
+        targetDom: document.getElementById('target'),
+        dbClickDom: document.getElementById('dbclick'),
+        showIconDom: document.getElementById('showIcon'),
+        defaults: {},
+        init: function(options) {
+            var base = this;
+            base.defaults = options;
+            base.restoreOptions();
+            base.saveOptions();
+        },
+        restoreOptions: function() {
+            var base = this;
+            var options = base.defaults;
+
+            // api
+            var apiDom = base.apiDom;
+            for (var i = 0; i < apiDom.children.length; i++) {
+                var child = apiDom.children[i];
+                for (var j = 0; j < options.api.length; j++) {
+                    if (child.value == options.api[j]) {
+                        child.selected = "true";
+                        break;
+                    }
+                }
+            }
+            apiDom.onchange = function() {
+                var children = this.children;
+                var api = [];
+                for (var i = 0; i< children.length; i++) {
+                    if (children[i].selected) {
+                        api.push(children[i].value);
+                    }
+                }
+
+                if (apiDom.options[0].selected) {
+                    base.googleOptionsDom.style.display = 'block';
+                } else {
+                    base.googleOptionsDom.style.display = 'none';
+                }
+                options.api = api;
+            };
+
+            // dbclick
+            var dbclickDom = base.dbclickDom;
+            dbclickDom.onclick = function() {
+                options.dbclick = this.checked;
+            };
+
+            // menu
+            var menuDom = base.menuDom;
+            menu.onclick = function(e) {
+                var target = e.target;
+                if (target.className != 'acitve') {
+                    var activeTab = menu.getElementsByClassName('active')[0];
+                    document.getElementById(activeTab.dataset.tab).style.display = 'none';
+                    activeTab.className = '';
+                    target.className = 'active';
+                    document.getElementById(target.dataset.tab).style.display = 'block';
+                }
+            };
+
+        },
+        saveOptions: function() {
+            var base = this;
+            var saveDom = base.saveDom;
+            var options = base.defaults;
+            // save button
+            saveDom.onclick = function() {
+                window.localStorage.
+                    setItem('translati0n', JSON.stringify(options));
+            };
+        }
+    };
+    var translati0nOptions = window.localStorage.getItem('translati0n');
+    var options = window.localStorage.getItem('translati0n');
+    if (null === options) {
+        chrome.extension.sendRequest({get: 'options'}, function(response) {
+            translati0n.init(response);
+        });
+    } else {
+        translati0nOptions = JSON.parse(translati0nOptions);
+        translati0n.init(translati0nOptions);
+    }
+
+    // get supported language
+    chrome.extension.sendRequest({supported: 'google'}, function(response) {
+        // TODO create selete language dropdown
+        var base = this;
+        var sourceDom = translati0n.sourceDom;
+        var targetDom = translati0n.targetDom;
+        if (typeof response.languages === 'object') {
+            var languages = response.languages;
+            for (var i = 0; i < languages.length; i++) {
+                var newOpt = new Option(languages[i].language, languages[i].language);
+                targetDom.options[i] = newOpt.cloneNode(true);
+                sourceDom.options[i+1] = newOpt;
+            }
+
+            var options = translati0n.defaults;
+            // google source
+            for (var i = 0; i < sourceDom.children.length; i++) {
+                var child = sourceDom.children[i];
+                if (child.value == options.google.source) {
+                    child.selected = "true";
+                    break;
+                }
+            }
+            sourceDom.onchange = function() {
+                options.google.source = this.value;
+            };
+
+            // google traget
+            for (var i = 0; i < targetDom.children.length; i++) {
+                var child = targetDom.children[i];
+                if (child.value == options.google.target) {
+                    child.selected = "true";
+                    break;
+                }
+            }
+            targetDom.onchange = function() {
+                options.google.target = this.value;
+            };
+        }
+        console.log(response);
+    });
+})();
+</script>
+</body>
+</html>

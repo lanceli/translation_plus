@@ -1,0 +1,277 @@
+<html> 
+<head> 
+</head> 
+<body> 
+<script>
+(function() {
+    var translati0n = {
+        defaults: {
+            enabled: true,
+            immediately: false, // translate immediately without icon
+            selectText: true, // work on selection text
+            dbclick: true, // work on dbclick
+            draggable: false,
+            suggestible: true,
+            api: [ // support multi api
+                'dictCn'
+            ],
+            google: {
+                target: 'en',
+                source: 'zh'
+            },
+            icon: {
+                name: 'icon',
+                iconOpacityLeave: 0.1,
+                iconOpacityEnter: 1,
+            }
+        },
+        optionsChanged: true,
+        apis: {
+            dictCn: {
+                worldOnly: true,
+                url: 'http://dict.cn/ws.php?utf8=true&q=',
+                copyright: 'Dict.cn',
+                website: 'dict.cn'
+            },
+            youdao: {
+            },
+            google: {
+                url: 'https://www.googleapis.com/language/translate/v2',
+                key: '?key=AIzaSyD93jGUZuNvp6mLDVQH2BwO00a9rxI9gJ4',
+                copyright: 'Google Translate',
+                website: 'translate.google.com'
+            }
+        },
+        init: function() {
+            var base = this;
+            var apis = base.apis;
+            base.getOptions();
+            base.storageListener();
+            chrome.extension.onRequest.addListener(
+                function(request, sender, sendResponse) {
+                    var d = base.defaults;
+                    if (base.optionsChanged && request.get === 'options') {
+                        sendResponse(base.getOptions());
+                    } else if (request.supported === 'google') { 
+                        // get supported languages
+                        var callback = function(xhr) {
+                            var data = JSON.parse(xhr.responseText);
+                            sendResponse(data.data);
+                        };
+                        var api = apis[request.supported];
+                        var url = api.url + '/languages' + api.key;
+                        base.sendRequest(url, callback);
+                    } else if ( // check if is translate text
+                        typeof request.text === 'string' &&
+                        typeof request.api === 'string'
+                    ) {
+                        base.translate(request, sendResponse);
+                    }
+                }
+            );
+        },
+        getOptions: function() {
+            var base = this,
+                d = base.defaults;
+            var options = window.localStorage.getItem('translati0n');
+            if (null === options) {
+                window.localStorage.
+                    setItem('translati0n', JSON.stringify(d));
+                options = d;
+            } else {
+                options = JSON.parse(options);
+                base.defaults = options;
+            }
+
+            // check translation is disabled
+            if (!options.enabled) {
+                chrome.browserAction.setIcon({path: 'icon_gray.png'});
+            }
+            return options;
+        },
+        translate: function(request, sendResponse) {
+            var base = this,
+                d = base.defaults;
+            var apis = base.apis;
+            var apiKey = request.api;
+            if (request.isGetSuggestion) {
+                apiKey = 'dictCn';
+            }
+            var api = apis[apiKey];
+            var url = api.url;
+            var text = encodeURIComponent(request.text);
+
+            // response
+            var responseFunc = function() {
+                var callback = function(xhr) {
+                    var response = base[apiKey](xhr, request);
+                    response.api = api;
+                    sendResponse(response);
+                };
+                base.sendRequest(url, callback);
+            };
+
+            // check api
+            if (apiKey === 'dictCn') {
+                url += text;
+            } else if (apiKey === 'google') {
+                var source = d.google.source;
+                var baseParams = api.key + '&q=' + text;
+                var detectUrl = url + '/detect' + baseParams;
+                url += baseParams +
+                    '&target=' + d.google.target;
+                if (source === 'detect') {
+                    base.sendRequest(detectUrl,
+                    function(xhr) {
+                        var data = JSON.parse(xhr.responseText);
+                        data = data.data;
+                        sources = data.detections;
+                        source = sources[0][0].language;
+                        url += '&source=' + source;
+                        responseFunc();
+                    });
+                    return;
+                }
+                url += '&source=' + source;
+            }
+            responseFunc();
+        },
+        storageListener: function() {
+            var base = this;
+
+            // storage listener
+            var handleStorage = function(e) {
+                e = e || window.event;
+                base.optionsChanged = true;
+                base.getOptions();
+                console.log(e);
+            };
+            if (window.addEventListener) {
+                window.addEventListener("storage", handleStorage, false);
+            } else {
+                window.attachEvent("onstorage", handleStorage);
+            };
+        },
+        sendRequest: function(url, callback, postData) {
+            var req = new XMLHttpRequest();
+            if (!req) return;
+            var method = (postData) ? "POST" : "GET";
+            req.open(method, url, true);
+            //req.setRequestHeader('User-Agent','XMLHTTP');
+            if (postData) {
+                req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            }
+            req.onreadystatechange = function () {
+                if (req.readyState != 4) return;
+                if (req.status != 200 && req.status != 304) {
+                    console.log('HTTP error ' + req.status);
+                    return;
+                }
+                callback(req);
+            };
+            if (req.readyState == 4) return;
+            req.send(postData);
+        },
+        parseXmlString: function(xmlText) {
+            var xmlDoc = null;
+            if (window.DOMParser) {
+                var parser = new DOMParser();
+                xmlDoc = parser.parseFromString(xmlText, "text/xml");
+            }
+            return xmlDoc;
+        },
+        google: function(xhr, request) {
+            var response = {
+                selectedText: request.text,
+                def: 'No enties found.',
+                pron: '',
+                count: 0
+            };
+
+            var data = JSON.parse(xhr.responseText);
+            data = data.data;
+            var translations = data.translations;
+            if (translations.length > 0) {
+                response.def = '';
+                for (var i = 0; i < translations.length; i++) {
+                    response.def += translations[i].translatedText;
+                }
+            }
+            console.log(response);
+
+            return response;
+        },
+        dictCn : function(xhr, request) {
+            var base = this;
+            var response = {
+                selectedText: request.text,
+                def: 'No enties found.',
+                pron: '',
+                count: 0
+            };
+            var xmlDoc = base.parseXmlString(xhr.responseText);
+
+            // parse suggestion
+            var suggNode = xmlDoc.getElementsByTagName('sugg');
+            if (request.isGetSuggestion) {
+                if (suggNode.length > 0) {
+                    // sugg
+                    var sugg = [];
+                    for (var i = 0; i < suggNode.length; i++) {
+                        sugg[i] = 
+                            suggNode[i].childNodes[0].nodeValue;
+                    }
+                    response.sugg = sugg;
+                } else {
+                    response.sugg = [];
+                }
+                return response;
+            }
+
+            var key = xmlDoc.getElementsByTagName('key');
+            if (key.length === 1) {
+                // word
+                response.text = key[0].childNodes[0].nodeValue;
+
+                // phonetic
+                var pron = '';
+                var pronNode = xmlDoc.getElementsByTagName('pron');
+                if (pronNode.length) {
+                    pron = '[' + pronNode[0].childNodes[0].nodeValue + ']';
+                }
+                response.pron = pron;
+
+                // def 
+                var def = '';
+                var defNode = xmlDoc.getElementsByTagName('def');
+                if (defNode.length) {
+                    def = defNode[0].childNodes[0].nodeValue;
+                }
+                response.def = def;
+
+                // example
+                var example = {};
+                var exampleNode = xmlDoc.getElementsByTagName('sent');
+                if (exampleNode.length) {
+                    for (var i = 0; i < exampleNode.length; i++) {
+                        example[i] = {};
+                        example[i].orig = 
+                            exampleNode[i].getElementsByTagName('orig')[0].
+                            childNodes[0].nodeValue;
+                        example[i].trans = 
+                            exampleNode[i].getElementsByTagName('trans')[0].
+                            childNodes[0].nodeValue;
+                    }
+                    response.example = example;
+                }
+            } else {
+                // not found
+            }
+            return response;
+        }
+    };
+    translati0n.init();
+})();
+</script>
+</body> 
+</html>

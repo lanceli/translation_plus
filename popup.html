@@ -1,0 +1,98 @@
+<html>
+<head>
+<style>
+body
+{
+}
+.menu
+{
+width:150px;
+}
+.menu .item 
+{
+height:24px;
+line-height:24px;
+border:1px solid transparent;
+}
+.menu .item:hover
+{
+cursor:pointer;
+border:1px solid #BBB;
+border-radius: 2px;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+}
+</style>
+</head>
+<body>
+<div class="menu">
+    <div class="item" id="options">
+        Settings
+    </div>
+    <div class="item" id="switcher">
+        Enable
+    </div>
+    <div class="item" id="immediately">
+        Immediately 
+    </div>
+</div>
+<script>
+(function() {
+    var options = window.localStorage.getItem('translati0n');
+
+    if (null !== options) {
+        options = JSON.parse(options);
+
+        // options
+        var optionsItem = document.getElementById('options');
+        optionsItem.onclick = function() {
+            chrome.tabs.create({url:chrome.extension.getURL("options.html")});
+        };
+      
+        // enable or disable
+        var switcher = document.getElementById('switcher');
+
+        if (options.enabled) {
+            switcher.innerText = 'Disable';
+        } else {
+            switcher.innerText = 'Enable';
+        }
+        switcher.onclick = function() {
+            var status;
+            if (options.enabled) {
+                status = false;
+                this.innerText = 'Enable';
+                chrome.browserAction.setIcon({path: 'icon_gray.png'});
+            } else {
+                status = true;
+                this.innerText = 'Disable';
+                chrome.browserAction.setIcon({path: 'icon.png'});
+            }
+            options.enabled = status;
+            window.localStorage.setItem('translati0n', JSON.stringify(options));
+        };
+
+        var immediately = document.getElementById('immediately');
+
+        if (options.immediately) {
+            immediately.innerText = 'Show Icon';
+        } else {
+            immediately.innerText = 'Immediately';
+        }
+        immediately.onclick = function() {
+            var status;
+            if (options.immediately) {
+                status = false;
+                this.innerText = 'Immediately';
+            } else {
+                status = true;
+                this.innerText = 'Show Icon';
+            }
+            options.immediately = status;
+            window.localStorage.setItem('translati0n', JSON.stringify(options));
+        };
+    }
+})();
+</script>
+</body>
+</html>
