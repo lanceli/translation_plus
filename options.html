@@ -9,6 +9,8 @@
         height: 100%;
         background:#F5F5F5;
         font-family:"Helvetica Neue", Helvetica, Verdana, Arial, sans-serif;
+        color: #666;
+        line-height:1.5;
     }
     #main {
         position: absolute;
@@ -37,15 +39,26 @@
         -webkit-transition: all 0.25s linear;
     }
     #menu li.active, #menu li:hover {
-        color: #999;
+        color: #666;
         text-shadow: rgba(255,255,255,1) 0px 0px 20px;
     }
     
+    #apiContainer {
+        display: inline-block;
+    }
+    #googleOptions {
+        display: inline-block;
+    }
     #optionsContainer {
         width: 500px;
         position: absolute;
         right: -520px;
         top: 150px;
+    }
+    #immediately {
+    }
+    #immediatelyWithKey {
+        display: inline-block;
     }
     #advanced {
         display: none;
@@ -55,16 +68,21 @@
         display: block;
         bottom: 5px;
         right: -110px;
-        color: #999;
         font-size:14px;
     }
     .option_row {
         clear: left;
         padding: 10px 2px;
     }
-    .option_name,
-    .option_picker {
-        float: left;
+    .option_row .tip {
+        font-style: italic;
+        font-size: 11px;
+        color: #999;
+    }
+    .label,
+    .label + * {
+        display: inline-block;
+        vertical-align: middle;
     }
     </style>
 </head>
@@ -78,7 +96,7 @@
     <div id="general">
     <div class="option_row">
         <div id="apiContainer">
-            <div class="option_name"> Api: </div>
+            <label class="label"> Apis: </label>
             <div class="option_picker">
             <select id="api" multiple>
                 <option value="google">Google Translate</option>
@@ -87,27 +105,38 @@
             </div>
         </div>
         <div id="googleOptions">
-            From:
+            <label class="label"> From: </label>
             <select id="source">
                 <option value="detect">Detect Language</option>
             </select>
-            To:
+            <label class="label"> To: </label>
             <select id="target">
             </select>
         </div>
+        <div class="tip">tip</div>
     </div>
     <div class="option_row">
-        Dbclick:
+        <label class="label"> Dbclick: </label>
         <input type="checkbox" name="dbclick" id="dbclick"/>
+        <div class="tip">tip</div>
     </div>
     <div class="option_row">
-        ShowIcon:
-        <input type="checkbox" name="showIcon" id="showIcon"/>
+        <label class="label"> Immediately: </label>
+        <input type="checkbox" name="immediately" id="immediately"/>
+        <div id="immediatelyWithKey">
+            <label class="label"> Immediately with key down: </label>
+            <select id="immediatelyKey">
+                <option value="ctrlKey">Ctrl</option>
+                <option value="altKey">Alt</option>
+                <option value="shiftKey">Shift</option>
+            </select>
+        </div>
+        <div class="tip">tip</div>
     </div>
     </div>
     <div id="advanced">
     <div class="option_row">
-        icon opacity:
+        <label class="label"> icon opacity: </label>
         <input type="range" name="iconOpacity" id="iconOpacity" min="0" max="10" step="1" value="1"/>
     </div>
     </div>
@@ -128,7 +157,8 @@
         sourceDom: document.getElementById('source'),
         targetDom: document.getElementById('target'),
         dbClickDom: document.getElementById('dbclick'),
-        showIconDom: document.getElementById('showIcon'),
+        immediatelyDom: document.getElementById('immediately'),
+        immediatelyWithKeyDom: document.getElementById('immediatelyWithKey'),
         defaults: {},
         init: function(options) {
             var base = this;
@@ -161,7 +191,7 @@
                 }
 
                 if (apiDom.options[0].selected) {
-                    base.googleOptionsDom.style.display = 'block';
+                    base.googleOptionsDom.style.display = 'inline-block';
                 } else {
                     base.googleOptionsDom.style.display = 'none';
                 }
@@ -170,8 +200,19 @@
 
             // dbclick
             var dbclickDom = base.dbclickDom;
+            dbclickDom.checked = options.dbclick;
             dbclickDom.onclick = function() {
                 options.dbclick = this.checked;
+            };
+
+
+            //aimmediately 
+            var immediatelyDom = base.immediatelyDom;
+            immediatelyDom.checked = options.immediately;
+            base.immediatelyWithKeyDom.style.display = immediatelyDom.checked ? 'none' : 'inline-block';
+            immediatelyDom.onclick = function() {
+                options.immediately = this.checked;
+                base.immediatelyWithKeyDom.style.display = options.immediately ? 'none' : 'inline-block';
             };
 
             // menu
