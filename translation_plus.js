@@ -113,7 +113,7 @@
             var css = document.createElement('link');
             css.setAttribute('rel', 'stylesheet');
             css.setAttribute('type', 'text/css');
-            css.setAttribute('href', chrome.extension.getURL('main.css'));
+            css.setAttribute('href', chrome.extension.getURL('translation_plus.css'));
             doc.appendChild(css);
             
 
@@ -267,7 +267,6 @@
                 };
 
                 var arrow = document.createElement('div');
-                arrow.innerHTML = '&#12296;';
                 arrow.className = base.wrapperKey + '-power-arrow';
                 power.appendChild(arrow);
 

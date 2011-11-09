@@ -164,16 +164,19 @@ cursor:pointer;
 }
 .translati0n .translati0n-body .translati0n-power-arrow
 {
-padding-right:8px;
-font-weight:700;
-font-size:13px;
+width:0;
+height:0;
+border-left:5px solid transparent;
+border-right:5px solid transparent;
+border-top:5px solid #888;
 display:inline-block;
--webkit-transform:rotate(-90deg);
--webkit-transition:-webkit-transform .5s ease-in-out;
+margin:0 0 2px 3px;
+-webkit-transition:all .5s ease-in-out;
 }
 .translati0n .translati0n-body .translati0n-collapsed .translati0n-power-arrow
 {
--webkit-transform:rotate(-180deg);
+margin-bottom:2px;
+-webkit-transform:rotate(-90deg);
 }
 .translati0n .translati0n-body .translati0n-item
 {
