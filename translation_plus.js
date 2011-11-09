@@ -40,7 +40,6 @@
         lastText: 'Lorem',
         lastResponse : {},
         icon: null, // icon dom
-        iconKey: 'translati0n-icon',
         hidden: '-9999px',
         absolute: 'absolute',
         iconSrc: chrome.extension.getURL('translati0n_icon.png'),
@@ -120,8 +119,8 @@
 
             // prepare translation icon
             var icon = document.createElement('img');
-            icon.id = base.iconKey + base.uuid;
-            icon.className = base.iconKey;
+            icon.id = base.wrapperKey + base.uuid;
+            icon.className = base.wrapperKey + '-icon';
             icon.style.opacity = d.icon.opacityLeave;
             icon.style.top = base.hidden;
             icon.style.position = base.absolute;
