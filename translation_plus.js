@@ -42,6 +42,7 @@
         icon: null, // icon dom
         iconKey: 'translati0n-icon',
         hidden: '-9999px',
+        absolute: 'absolute',
         iconSrc: chrome.extension.getURL('translati0n_icon.png'),
         iconOffsetTop: 10,
         iconOffsetLeft: 10,
@@ -123,6 +124,7 @@
             icon.className = base.iconKey;
             icon.style.opacity = d.icon.opacityLeave;
             icon.style.top = base.hidden;
+            icon.style.position = base.absolute;
             icon.src = base.iconSrc;
 
             base.icon = icon;
@@ -133,6 +135,7 @@
             wrapper.id = base.wrapperKey + base.uuid;
             wrapper.className = base.wrapperKey;
             wrapper.style.top = base.hidden;
+            wrapper.style.position = base.absolute;
             // for transition animation
             if (d.animation) {
                 wrapper.className += ' ' + base.wrapperKey + '-aniamtion';
