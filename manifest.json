@@ -14,7 +14,7 @@
     "content_scripts": [
         {
         "matches": ["*://*/*"],
-        "js": ["main.js"]
+        "js": ["translation_plus.js"]
         }
     ]
 } 
