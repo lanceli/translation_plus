@@ -18,7 +18,7 @@
             ], 
             selectText: true, // work on selection text
             dbclick: true, // work on dbclick
-            draggable: false,
+            draggable: true,
             suggestible: true,
             api: [ // support multi api
                 'dictCn'
@@ -192,7 +192,7 @@
             // foot
             var foot = document.createElement('div');
             foot.className = base.wrapperKey + '-foot';
-            foot.draggable = true;
+            foot.draggable = d.draggable;
             wrapper.appendChild(foot);
 
             base.wrapper = wrapper;
@@ -485,54 +485,30 @@
                 wrapper.lastMousePosition = base.mousePosition(e);
             };
             if (d.draggable) {
-                wrapper.addEventListener('dragover', function(e) {
+                var relativeX, relativeY; 
+                wrapper.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/html', base.wrapperKey); // needed for FF&Chrome ?.
+                    e.dataTransfer.effectAllowed = 'move';
+                    relativeX = e.pageX - parseInt(wrapper.style.left);
+                    relativeY = e.pageY - parseInt(wrapper.style.top);
+                });
+                document.addEventListener('dragover', function(e) {
                     var target = e.target || e.srcElement;
 
                     if (e.preventDefault) {
                         e.preventDefault();
                     }
 
-                    var mousePosition = base.mousePosition(e);
-                    // detect os
-                    if (navigator.platform === 'Mac') {
-                    } else {
-                        if (+wrapper.style.opacity !== 0.3) {
-                            wrapper.style.opacity = 0.3;
-                        }
-                        if (
-                            typeof wrapper.lastMousePosition === 'undefined'
-                        ) {
-                            wrapper.lastMousePosition = {x:'', y:''};
-                        }
-                        if (
-                            mousePosition.x !== wrapper.lastMousePosition.x
-                            || 
-                            mousePosition.y !== wrapper.lastMousePosition.y
-                        ) {
-                            var left = parseInt(wrapper.style.left, 10);
-                            var top = parseInt(wrapper.style.top, 10);
-                            var rangLeft = wrapper.lastMousePosition.x - mousePosition.x;
-                            var rangTop = wrapper.lastMousePosition.y - mousePosition.y;
-                            if (rangLeft !== 0) {
-                                wrapper.style.left = left - rangLeft + 'px';
-                            }
-                            if (rangTop !== 0) {
-                                wrapper.style.top = top - rangTop + 'px';
-                            }
-                            wrapper.lastMousePosition = {
-                                x: mousePosition.x,
-                                y: mousePosition.y
-                            };
-                        }
-                    }
                     return false;
                 }, false);
                 document.addEventListener('drop', function(e) {
                     if (e.preventDefault) {
                         e.preventDefault();
                     }
-                    if (+wrapper.style.opacity === 0.3) {
-                        wrapper.style.opacity = 1;
+                    var reg = new RegExp(base.wrapperKey);
+                    if (reg.test(e.dataTransfer.getData('text/html'))) {
+                        wrapper.style.top = e.pageY - relativeY + 'px';
+                        wrapper.style.left = e.pageX - relativeX + 'px';
                     }
                 });
             }

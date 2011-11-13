@@ -135,10 +135,14 @@
     </div>
     </div>
     <div id="advanced">
-    <div class="option_row">
-        <label class="label"> icon opacity: </label>
-        <input type="range" name="iconOpacity" id="iconOpacity" min="0" max="10" step="1" value="1"/>
-    </div>
+        <div class="option_row">
+            <label class="label"> icon opacity: </label>
+            <input type="range" name="iconOpacity" id="iconOpacity" min="0" max="10" step="1" value="1"/>
+        </div>
+        <div class="option_row">
+            <label class="label"> draggable </label>
+            <input type="checkbox" name="draggable" id="draggable"/>
+        </div>
     </div>
     <div class="option_row">
         <button id="save">Save</button>
@@ -159,6 +163,7 @@
         dbClickDom: document.getElementById('dbclick'),
         immediatelyDom: document.getElementById('immediately'),
         immediatelyWithKeyDom: document.getElementById('immediatelyWithKey'),
+        draggableDom: document.getElementById('draggable'),
         defaults: {},
         init: function(options) {
             var base = this;
@@ -205,8 +210,14 @@
                 options.dbclick = this.checked;
             };
 
+            // draggable
+            var draggableDom = base.draggableDom;
+            draggableDom.checked = options.draggable;
+            draggableDom.onclick = function() {
+                options.dbclick = this.checked;
+            };
 
-            //aimmediately 
+            // immediately 
             var immediatelyDom = base.immediatelyDom;
             immediatelyDom.checked = options.immediately;
             base.immediatelyWithKeyDom.style.display = immediatelyDom.checked ? 'none' : 'inline-block';
