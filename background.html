@@ -253,11 +253,12 @@
                 var example = {};
                 var exampleNode = xmlDoc.getElementsByTagName('sent');
                 if (exampleNode.length) {
+                    var reg = new RegExp('<em>' + response.text + '<\/em>', 'g');
                     for (var i = 0; i < exampleNode.length; i++) {
                         example[i] = {};
                         example[i].orig = 
                             exampleNode[i].getElementsByTagName('orig')[0].
-                            childNodes[0].nodeValue;
+                            childNodes[0].nodeValue.replace(reg, '"' + response.text + '"');
                         example[i].trans = 
                             exampleNode[i].getElementsByTagName('trans')[0].
                             childNodes[0].nodeValue;

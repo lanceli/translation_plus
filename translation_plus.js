@@ -282,12 +282,12 @@
                 example.className = base.wrapperKey + '-example';
                 for (var i in response.example) {
                     var orig = document.createElement('span');
-                    orig.innerHTML = response.example[i].orig;
+                    orig.innerText = response.example[i].orig;
                     orig.className = base.wrapperKey + '-orig';
                     example.appendChild(orig);
 
                     var trans = document.createElement('span');
-                    trans.innerHTML = response.example[i].trans;
+                    trans.innerText = response.example[i].trans;
                     trans.className = base.wrapperKey + '-trans';
                     example.appendChild(trans);
                 }
@@ -309,9 +309,9 @@
             // foot
             var foot = wrapper.children[2];
             foot.innerText = '';
-            foot.innerHTML = 'Powered By &copy; ';
+            foot.innerText = 'Powered By &copy; ';
             var power = document.createElement('a');
-            power.innerHTML = response.api.copyright;
+            power.innerText = response.api.copyright;
             power.href = 'http://' + response.api.website;
             power.target = '_blank';
             power.className = base.wrapperKey + '-power';
