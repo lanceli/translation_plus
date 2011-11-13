@@ -309,7 +309,7 @@
             // foot
             var foot = wrapper.children[2];
             foot.innerText = '';
-            foot.innerText = 'Powered By &copy; ';
+            foot.innerHTML = 'Powered By &copy; ';
             var power = document.createElement('a');
             power.innerText = response.api.copyright;
             power.href = 'http://' + response.api.website;
