@@ -170,8 +170,15 @@
         init: function(options) {
             var base = this;
             base.defaults = options;
+            base.setLocalizedTopicList();
             base.restoreOptions();
             base.saveOptions();
+        },
+        setLocalizedTopicList: function() {
+            var base = this;
+            var getI18nMsg = chrome.i18n.getMessage;
+            base.menuDom.children[0].innerText = getI18nMsg('options_menu_general');
+            base.menuDom.children[1].innerText = getI18nMsg('options_menu_advanced');
         },
         restoreOptions: function() {
             var base = this;

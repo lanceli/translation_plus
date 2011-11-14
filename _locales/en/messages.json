@@ -4,5 +4,11 @@
     },
     "extDescription": {
         "message": "Translation+ for chrome"
+    },
+    "options_menu_general": {
+        "message": "General+ en"
+    },
+    "options_menu_advanced": {
+        "message": "Advanced"
     }
 } 
