@@ -167,15 +167,6 @@
             };
             head.appendChild(headInput);
 
-            // cancel icon
-            var cancel = document.createElement('div');
-            cancel.className = base.wrapperKey + '-cancel';
-            cancel.innerHTML = '&#10008;';
-            cancel.onclick = function() {
-                this.previousSibling.value = '';
-            };
-            head.appendChild(cancel);
-
             // tip
             var tip = document.createElement('div');
             tip.className = base.wrapperKey + '-tip';
