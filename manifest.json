@@ -1,7 +1,7 @@
 {
     "name": "__MSG_extName__",
     "version": "1.0",
-    "description": "Translation+",
+    "description": "__MSG_extDescription__",
     "default_locale": "en",
     "permissions": [
         "http://dict.cn/", "https://www.googleapis.com/language/translate/v2"
@@ -14,7 +14,7 @@
     "background_page": "background.html",
     "content_scripts": [
         {
-        "matches": ["*://*/*"],
+        "matches": ["<all_urls>"],
         "js": ["translation_plus.js"],
         "all_frames": true
         }

@@ -11,14 +11,41 @@
         border-right: 6px solid transparent;
         border-top: 6px solid #333;
     }
+    .target 
+    {
+    -khtml-user-select: none;
+-webkit-user-select: none;
+    margin-top: 30px; padding: 30px; width: 70px; border: 1px solid black; background: #c0c0ff; margin-bottom: 30px; -webkit-user-drop: element;
+    }
+    [draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
 	</style>
 
 </head>
 <body>
-<div id="translati0n1302507716046" class="translati0n" style="top: 127px; left: 748px;">
+<div draggable="true" id="translati0n1302507716046" class="translati0n"  style="top: 127px; left: 748px;" >
     <div class="translati0n-head"><div class="translati0n-search"></div><div class="translati0n-search-decoration"></div><input name="translati0n-text" class="translati0n-text" type="text" value="over"/><div class="translati0n-cancel">&#10006;</div><div class="translati0n-tip"></div></div>
     <div class="translati0n-body">
 
+http://www.html5rocks.com/en/tutorials/dnd/basics/
+<div class="translati0n-power-arrow">〈</div>
+        <span class="translati0n-pron">['əuvə]</span>
+        <span class="translati0n-loading">loading</span>
+        <span class="translati0n-def">prep.在 ... 的上方, 遍及地, 在 ... 期间 <br>adv.穿过, 完全覆盖, 结束, 落下 <br>n.(板球中)每个投球手一次连续所投出的球数</span>
+    </div>
+    <div class="translati0n-foot">
+Powered By © <a class="translati0n-power" href="#">Dict.cn</a>
+    </div>
+</div>
+<div id="translati0n13025077160460" class="translati0n" style="top: 427px; left: 748px;" >
+    <div class="translati0n-head"><div class="translati0n-search"></div><div class="translati0n-search-decoration"></div><input name="translati0n-text" class="translati0n-text" type="text" value="over"/><div class="translati0n-cancel">&#10006;</div><div class="translati0n-tip"></div></div>
+    <div class="translati0n-body">
+
+http://www.html5rocks.com/en/tutorials/dnd/basics/
 <div class="translati0n-power-arrow">〈</div>
         <span class="translati0n-pron">['əuvə]</span>
         <span class="translati0n-loading">loading</span>
@@ -29,5 +56,18 @@ Powered By © <a class="translati0n-power" href="#">Dict.cn</a>
     </div>
 </div>
 <div class="arrow-down"></div>
+<div id="cc" draggable="true">ccc</div>
+<div id="target" class="target"></div>
+    <script>
+
+        var _this = document.getElementById('translati0n1302507716046');
+        _this.addEventListener('dragstart', function(e) {
+    e.dataTransfer.setData('text/html', this.innerHTML); // needed for FF.
+        console.log('d');
+        });
+    document.body.addEventListener('dragover', function() {
+    console.log('a');
+    });
+    </script>
 </body>
 </html>
