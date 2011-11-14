@@ -42,7 +42,7 @@
         icon: null, // icon dom
         hidden: '-9999px',
         absolute: 'absolute',
-        iconSrc: chrome.extension.getURL('translati0n_icon.png'),
+        iconSrc: chrome.extension.getURL('images/translati0n_icon.png'),
         iconOffsetTop: 10,
         iconOffsetLeft: 10,
         wrapper: null, // wrapper dom
@@ -113,7 +113,7 @@
             var css = document.createElement('link');
             css.setAttribute('rel', 'stylesheet');
             css.setAttribute('type', 'text/css');
-            css.setAttribute('href', chrome.extension.getURL('translation_plus.css'));
+            css.setAttribute('href', chrome.extension.getURL('css/translation_plus.css'));
             doc.appendChild(css);
             
 
