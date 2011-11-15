@@ -89,18 +89,18 @@
 <body>
 <div id="main">
     <ul id="menu">
-    <li class="active" data-tab="general">General</li>
-    <li data-tab="advanced">Advanced</li>
+    <li class="active" data-tab="general" data-key="options_menu_general" data-role="localization">General</li>
+    <li data-tab="advanced" data-key="options_menu_advanced" data-role="localization">Advanced</li>
     </ul>
     <div id="optionsContainer">
     <div id="general">
     <div class="option_row">
         <div id="apiContainer">
-            <label class="label"> Apis: </label>
+            <label class="label" data-key="general_apis" data-role="localization"> Apis: </label>
             <div class="option_picker">
             <select id="api" multiple>
-                <option value="google">Google Translate</option>
-                <option value="dictCn">dictCN</option>
+                <option value="google" data-key="general_apis_google_translate" data-role="localization">Google Translate</option>
+                <option value="dictCn" data-key="general_apis_dict_cn" data-role="localization">dictCN</option>
             </select>
             </div>
         </div>
@@ -113,41 +113,41 @@
             <select id="target">
             </select>
         </div>
-        <div class="tip">tip</div>
+        <div class="tip" data-key="general_apis_tip" data-role="localization">tip</div>
     </div>
     <div class="option_row">
-        <label class="label"> Immediately: </label>
+        <label class="label" data-key="general_immediately" data-role="localization"> Immediately: </label>
         <input type="checkbox" name="immediately" id="immediately"/>
         <div id="immediatelyWithKey">
-            <label class="label"> Immediately with key down: </label>
+            <label class="label" data-key="general_immediately_shortcut" data-role="localization"> Immediately with key down: </label>
             <select id="immediatelyKey">
                 <option value="ctrlKey">Ctrl</option>
                 <option value="altKey">Alt</option>
                 <option value="shiftKey">Shift</option>
             </select>
         </div>
-        <div class="tip">tip</div>
+        <div class="tip" data-key="general_immediately_tip" data-role="localization">tip</div>
     </div>
     </div>
     <div id="advanced">
         <div class="option_row">
-            <label class="label"> icon opacity: </label>
+            <label class="label" data-key="advanced_icon_opacity" data-role="localization"> icon opacity: </label>
             <input type="range" name="iconOpacity" id="iconOpacity" min="0" max="10" step="1" value="1"/>
-            <div class="tip">tip</div>
+            <div class="tip" data-key="advanced_icon_opacity_tip" data-role="localization">tip</div>
         </div>
         <div class="option_row">
-            <label class="label"> draggable </label>
+            <label class="label" data-key="advanced_draggable" data-role="localization"> draggable </label>
             <input type="checkbox" name="draggable" id="draggable"/>
-            <div class="tip">tip</div>
+            <div class="tip" data-key="advanced_draggable_tip" data-role="localization">tip</div>
         </div>
         <div class="option_row">
-            <label class="label"> Dbclick: </label>
+            <label class="label" data-key="advanced_dbclick" data-role="localization"> Dbclick: </label>
             <input type="checkbox" name="dbclick" id="dbclick"/>
-            <div class="tip">tip</div>
+            <div class="tip" data-key="advanced_dbclick_tip" data-role="localization">tip</div>
         </div>
     </div>
     <div class="option_row">
-        <button id="save">Save</button>
+        <button id="save" data-key="button_save" data-role="localization">Save</button>
     </div>
     </div>
     <a id="genius" href="http://ilanceli.wordpress.com">made@Lance</a>
@@ -179,6 +179,13 @@
             var getI18nMsg = chrome.i18n.getMessage;
             base.menuDom.children[0].innerText = getI18nMsg('options_menu_general');
             base.menuDom.children[1].innerText = getI18nMsg('options_menu_advanced');
+
+            var localizations = document.querySelectorAll('[data-role="localization"]');
+            for (var i = 0; i < localizations.length; i++) {
+                console.log(localizations[i]);
+                localizations[i].innerText = getI18nMsg(localizations[i].dataset.key);
+            }
+
         },
         restoreOptions: function() {
             var base = this;

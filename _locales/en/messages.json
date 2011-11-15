@@ -5,10 +5,52 @@
     "extDescription": {
         "message": "Translation+ for chrome"
     },
+    "button_save": {
+        "message": "Save"
+    },
     "options_menu_general": {
         "message": "General+ en"
     },
     "options_menu_advanced": {
         "message": "Advanced"
+    },
+    "general_apis": {
+        "message": "Available APIs"
+    },
+    "general_apis_tip": {
+        "message": "Dict.cn is friendly for Chinese, Google Translate support a lot of languages."
+    },
+    "general_apis_google_translate": {
+        "message": "Google Translate"
+    },
+    "general_apis_dict_cn": {
+        "message": "Dict.cn"
+    },
+    "general_immediately": {
+        "message": "Is immediately show popup?"
+    },
+    "general_immediately_shortcut": {
+        "message": "Immediately with key: "
+    },
+    "general_immediately_tip": {
+        "message": "Is immediately show popup or show icon?"
+    },
+    "advanced_icon_opacity": {
+        "message": "Icon opacity"
+    },
+    "advanced_icon_opacity_tip": {
+        "message": "You can set the opacity of icon. I prefer zero ;)."
+    },
+    "advanced_draggable": {
+        "message": "Draggable"
+    },
+    "advanced_draggable_tip": {
+        "message": "Does the popup can drag?"
+    },
+    "advanced_dbclick": {
+        "message": "Double Click"
+    },
+    "advanced_dbclick_tip": {
+        "message": "Does support double click?"
     }
 } 
