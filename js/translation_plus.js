@@ -29,7 +29,7 @@
             },
             icon: {
                 name: 'icon',
-                opacityLeave: 0,
+                opacityLeave: 0.4,
                 opacityEnter: 1,
             },
             animation: false

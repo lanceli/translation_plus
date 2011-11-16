@@ -52,5 +52,14 @@
     },
     "advanced_dbclick_tip": {
         "message": "Does support double click?"
+    },
+    "ext_status_enable": {
+        "message": "Enable"
+    },
+    "ext_status_disable": {
+        "message": "Disable"
+    },
+    "popup_item_options": {
+        "message": "Options"
     }
 } 

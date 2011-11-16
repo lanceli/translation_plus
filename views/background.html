@@ -8,6 +8,9 @@
         defaults: {
             enabled: true,
             immediately: false, // translate immediately without icon
+            immediatelyWithKey: [ // if immediately is false and with key down, show translation 
+                'altKey'
+            ], 
             selectText: true, // work on selection text
             dbclick: true, // work on dbclick
             draggable: true,
@@ -21,7 +24,7 @@
             },
             icon: {
                 name: 'icon',
-                iconOpacityLeave: 0.1,
+                iconOpacityLeave: 0.4,
                 iconOpacityEnter: 1,
             }
         },

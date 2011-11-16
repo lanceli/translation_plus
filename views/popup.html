@@ -26,46 +26,50 @@ border-radius: 2px;
 </head>
 <body>
 <div class="menu">
-    <div class="item" id="options">
-        Settings
-    </div>
-    <div class="item" id="switcher">
-        Enable
-    </div>
-    <div class="item" id="immediately">
-        Immediately 
-    </div>
+    <div class="item" id="immediately"></div>
+    <div class="item" id="switcher"></div>
+    <div class="item" id="options" data-localization="popup_item_options"> Options </div>
 </div>
 <script>
 (function() {
     var options = window.localStorage.getItem('translati0n');
 
+    var setLocalizedTopic = function() {
+        var getI18nMsg = chrome.i18n.getMessage;
+
+        var localizations = document.querySelectorAll('[data-localization]');
+        for (var i = 0; i < localizations.length; i++) {
+            localizations[i].innerText = getI18nMsg(localizations[i].dataset.localization);
+        }
+
+    };
+    setLocalizedTopic();
     if (null !== options) {
         options = JSON.parse(options);
 
         // options
         var optionsItem = document.getElementById('options');
         optionsItem.onclick = function() {
-            chrome.tabs.create({url:chrome.extension.getURL("options.html")});
+            chrome.tabs.create({url:chrome.extension.getURL("views/options.html")});
         };
       
         // enable or disable
         var switcher = document.getElementById('switcher');
 
         if (options.enabled) {
-            switcher.innerText = 'Disable';
+            switcher.innerText = chrome.i18n.getMessage('ext_status_disable');
         } else {
-            switcher.innerText = 'Enable';
+            switcher.innerText = chrome.i18n.getMessage('ext_status_enable');
         }
         switcher.onclick = function() {
             var status;
             if (options.enabled) {
                 status = false;
-                this.innerText = 'Enable';
+                this.innerText = chrome.i18n.getMessage('ext_status_enable');
                 chrome.browserAction.setIcon({path: 'icon_gray.png'});
             } else {
                 status = true;
-                this.innerText = 'Disable';
+                this.innerText = chrome.i18n.getMessage('ext_status_disable');
                 chrome.browserAction.setIcon({path: 'icon.png'});
             }
             options.enabled = status;

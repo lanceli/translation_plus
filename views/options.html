@@ -76,7 +76,7 @@
     }
     .option_row .tip {
         font-style: italic;
-        font-size: 11px;
+        font-size: 12px;
         color: #999;
     }
     .label,
@@ -89,18 +89,18 @@
 <body>
 <div id="main">
     <ul id="menu">
-    <li class="active" data-tab="general" data-key="options_menu_general" data-role="localization">General</li>
-    <li data-tab="advanced" data-key="options_menu_advanced" data-role="localization">Advanced</li>
+    <li class="active" data-tab="general" data-localization="options_menu_general" >General</li>
+    <li data-tab="advanced" data-localization="options_menu_advanced" >Advanced</li>
     </ul>
     <div id="optionsContainer">
     <div id="general">
     <div class="option_row">
         <div id="apiContainer">
-            <label class="label" data-key="general_apis" data-role="localization"> Apis: </label>
+            <label class="label" data-localization="general_apis" > Apis: </label>
             <div class="option_picker">
             <select id="api" multiple>
-                <option value="google" data-key="general_apis_google_translate" data-role="localization">Google Translate</option>
-                <option value="dictCn" data-key="general_apis_dict_cn" data-role="localization">dictCN</option>
+                <option value="google" data-localization="general_apis_google_translate" >Google Translate</option>
+                <option value="dictCn" data-localization="general_apis_dict_cn" >dictCN</option>
             </select>
             </div>
         </div>
@@ -113,44 +113,44 @@
             <select id="target">
             </select>
         </div>
-        <div class="tip" data-key="general_apis_tip" data-role="localization">tip</div>
+        <div class="tip" data-localization="general_apis_tip" >tip</div>
     </div>
     <div class="option_row">
-        <label class="label" data-key="general_immediately" data-role="localization"> Immediately: </label>
+        <label class="label" data-localization="general_immediately" > Immediately: </label>
         <input type="checkbox" name="immediately" id="immediately"/>
         <div id="immediatelyWithKey">
-            <label class="label" data-key="general_immediately_shortcut" data-role="localization"> Immediately with key down: </label>
+            <label class="label" data-localization="general_immediately_shortcut" > Immediately with key down: </label>
             <select id="immediatelyKey">
                 <option value="ctrlKey">Ctrl</option>
                 <option value="altKey">Alt</option>
                 <option value="shiftKey">Shift</option>
             </select>
         </div>
-        <div class="tip" data-key="general_immediately_tip" data-role="localization">tip</div>
+        <div class="tip" data-localization="general_immediately_tip" >tip</div>
     </div>
     </div>
     <div id="advanced">
         <div class="option_row">
-            <label class="label" data-key="advanced_icon_opacity" data-role="localization"> icon opacity: </label>
+            <label class="label" data-localization="advanced_icon_opacity" > icon opacity: </label>
             <input type="range" name="iconOpacity" id="iconOpacity" min="0" max="10" step="1" value="1"/>
-            <div class="tip" data-key="advanced_icon_opacity_tip" data-role="localization">tip</div>
+            <div class="tip" data-localization="advanced_icon_opacity_tip" >tip</div>
         </div>
         <div class="option_row">
-            <label class="label" data-key="advanced_draggable" data-role="localization"> draggable </label>
+            <label class="label" data-localization="advanced_draggable" > draggable </label>
             <input type="checkbox" name="draggable" id="draggable"/>
-            <div class="tip" data-key="advanced_draggable_tip" data-role="localization">tip</div>
+            <div class="tip" data-localization="advanced_draggable_tip" >tip</div>
         </div>
         <div class="option_row">
-            <label class="label" data-key="advanced_dbclick" data-role="localization"> Dbclick: </label>
+            <label class="label" data-localization="advanced_dbclick" > Dbclick: </label>
             <input type="checkbox" name="dbclick" id="dbclick"/>
-            <div class="tip" data-key="advanced_dbclick_tip" data-role="localization">tip</div>
+            <div class="tip" data-localization="advanced_dbclick_tip" >tip</div>
         </div>
     </div>
     <div class="option_row">
-        <button id="save" data-key="button_save" data-role="localization">Save</button>
+        <button id="save" data-localization="button_save" >Save</button>
     </div>
     </div>
-    <a id="genius" href="http://ilanceli.wordpress.com">made@Lance</a>
+    <a id="genius" href="http://lanceli.com">made@Lance</a>
 </div>
 <script type="text/javascript">
 (function() {
@@ -165,25 +165,23 @@
         dbClickDom: document.getElementById('dbclick'),
         immediatelyDom: document.getElementById('immediately'),
         immediatelyWithKeyDom: document.getElementById('immediatelyWithKey'),
+        immediatelyKeyDom: document.getElementById('immediatelyKey'),
         draggableDom: document.getElementById('draggable'),
         defaults: {},
         init: function(options) {
             var base = this;
             base.defaults = options;
-            base.setLocalizedTopicList();
+            base.setLocalizedTopic();
             base.restoreOptions();
             base.saveOptions();
         },
-        setLocalizedTopicList: function() {
+        setLocalizedTopic: function() {
             var base = this;
             var getI18nMsg = chrome.i18n.getMessage;
-            base.menuDom.children[0].innerText = getI18nMsg('options_menu_general');
-            base.menuDom.children[1].innerText = getI18nMsg('options_menu_advanced');
 
-            var localizations = document.querySelectorAll('[data-role="localization"]');
+            var localizations = document.querySelectorAll('[data-localization]');
             for (var i = 0; i < localizations.length; i++) {
-                console.log(localizations[i]);
-                localizations[i].innerText = getI18nMsg(localizations[i].dataset.key);
+                localizations[i].innerText = getI18nMsg(localizations[i].dataset.localization);
             }
 
         },
@@ -240,6 +238,19 @@
             immediatelyDom.onclick = function() {
                 options.immediately = this.checked;
                 base.immediatelyWithKeyDom.style.display = options.immediately ? 'none' : 'inline-block';
+            };
+
+            // immediately key
+            var immediatelyKeyDom = base.immediatelyKeyDom;
+            for (var i = 0; i < immediatelyKeyDom.children.length; i++) {
+                var child = immediatelyKeyDom.children[i];
+                if (child.value == options.immediatelyWithKey[0]) {
+                    child.selected = "true";
+                    break;
+                }
+            }
+            immediatelyKeyDom.onchange = function() {
+                options.immediatelyWithKey = this.value;
             };
 
             // menu
