@@ -27,19 +27,19 @@
         "message": "Dict.cn"
     },
     "general_immediately": {
-        "message": "Is immediately show popup?"
+        "message": "Show floating icon."
     },
     "general_immediately_shortcut": {
-        "message": "Immediately with key: "
+        "message": "Key show results imediately."
     },
     "general_immediately_tip": {
-        "message": "Is immediately show popup or show icon?"
+        "message": "Tip"
     },
     "advanced_icon_opacity": {
         "message": "Icon opacity"
     },
     "advanced_icon_opacity_tip": {
-        "message": "You can set the opacity of icon. I prefer zero ;)."
+        "message": "You can set the opacity of icon. I prefer transparent;)."
     },
     "advanced_draggable": {
         "message": "Draggable"

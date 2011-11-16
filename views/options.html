@@ -116,15 +116,15 @@
         <div class="tip" data-localization="general_apis_tip" >tip</div>
     </div>
     <div class="option_row">
-        <label class="label" data-localization="general_immediately" > Immediately: </label>
         <input type="checkbox" name="immediately" id="immediately"/>
+        <label class="label" data-localization="general_immediately" > Immediately: </label>
         <div id="immediatelyWithKey">
-            <label class="label" data-localization="general_immediately_shortcut" > Immediately with key down: </label>
             <select id="immediatelyKey">
                 <option value="ctrlKey">Ctrl</option>
                 <option value="altKey">Alt</option>
                 <option value="shiftKey">Shift</option>
             </select>
+            <label class="label" data-localization="general_immediately_shortcut" > Immediately with key down: </label>
         </div>
         <div class="tip" data-localization="general_immediately_tip" >tip</div>
     </div>
@@ -132,17 +132,18 @@
     <div id="advanced">
         <div class="option_row">
             <label class="label" data-localization="advanced_icon_opacity" > icon opacity: </label>
-            <input type="range" name="iconOpacity" id="iconOpacity" min="0" max="10" step="1" value="1"/>
+            <input type="range" name="iconOpacity" id="iconOpacity" min="0" max="10" step="1"/>
+            <img id="iconDemo" src="../images/translati0n_icon.png"/>
             <div class="tip" data-localization="advanced_icon_opacity_tip" >tip</div>
         </div>
         <div class="option_row">
-            <label class="label" data-localization="advanced_draggable" > draggable </label>
             <input type="checkbox" name="draggable" id="draggable"/>
+            <label class="label" data-localization="advanced_draggable" > draggable </label>
             <div class="tip" data-localization="advanced_draggable_tip" >tip</div>
         </div>
         <div class="option_row">
-            <label class="label" data-localization="advanced_dbclick" > Dbclick: </label>
             <input type="checkbox" name="dbclick" id="dbclick"/>
+            <label class="label" data-localization="advanced_dbclick" > Dbclick: </label>
             <div class="tip" data-localization="advanced_dbclick_tip" >tip</div>
         </div>
     </div>
@@ -154,19 +155,23 @@
 </div>
 <script type="text/javascript">
 (function() {
+    var t$ = function(el) {
+        return document.getElementById(el);
+    };
     var translati0n = {
-        menuDom: document.getElementById('menu'),
-        apiDom: document.getElementById('api'),
-        saveDom: document.getElementById('save'),
-        dbclickDom: document.getElementById('dbclick'),
-        googleOptionsDom: document.getElementById('googleOptions'),
-        sourceDom: document.getElementById('source'),
-        targetDom: document.getElementById('target'),
-        dbClickDom: document.getElementById('dbclick'),
-        immediatelyDom: document.getElementById('immediately'),
-        immediatelyWithKeyDom: document.getElementById('immediatelyWithKey'),
-        immediatelyKeyDom: document.getElementById('immediatelyKey'),
-        draggableDom: document.getElementById('draggable'),
+        menuDom: t$('menu'),
+        apiDom: t$('api'),
+        saveDom: t$('save'),
+        dbclickDom: t$('dbclick'),
+        googleOptionsDom: t$('googleOptions'),
+        sourceDom: t$('source'),
+        targetDom: t$('target'),
+        dbClickDom: t$('dbclick'),
+        immediatelyDom: t$('immediately'),
+        immediatelyWithKeyDom: t$('immediatelyWithKey'),
+        immediatelyKeyDom: t$('immediatelyKey'),
+        draggableDom: t$('draggable'),
+        opacityDom: t$('iconOpacity'),
         defaults: {},
         init: function(options) {
             var base = this;
@@ -233,11 +238,11 @@
 
             // immediately 
             var immediatelyDom = base.immediatelyDom;
-            immediatelyDom.checked = options.immediately;
-            base.immediatelyWithKeyDom.style.display = immediatelyDom.checked ? 'none' : 'inline-block';
+            immediatelyDom.checked = !options.immediately;
+            base.immediatelyWithKeyDom.style.display = !immediatelyDom.checked ? 'none' : 'inline-block';
             immediatelyDom.onclick = function() {
                 options.immediately = this.checked;
-                base.immediatelyWithKeyDom.style.display = options.immediately ? 'none' : 'inline-block';
+                base.immediatelyWithKeyDom.style.display = !options.immediately ? 'none' : 'inline-block';
             };
 
             // immediately key
@@ -259,11 +264,23 @@
                 var target = e.target;
                 if (target.className != 'acitve') {
                     var activeTab = menu.getElementsByClassName('active')[0];
-                    document.getElementById(activeTab.dataset.tab).style.display = 'none';
+                    t$(activeTab.dataset.tab).style.display = 'none';
                     activeTab.className = '';
                     target.className = 'active';
-                    document.getElementById(target.dataset.tab).style.display = 'block';
+                    t$(target.dataset.tab).style.display = 'block';
                 }
+            };
+
+            // icon opacity
+            var opacityDom = base.opacityDom;
+            var opacity = options.icon.opacityLeave;
+            var iconDemo = t$('iconDemo');
+            iconDemo.style.opacity = opacity;
+            opacityDom.value = 10 * opacity;
+            opacityDom.onchange = function() {
+                iconDemo.style.opacity = 
+                    options.icon.opacityLeave = 
+                    parseInt(this.value, 10) / 10;
             };
 
         },
@@ -275,6 +292,7 @@
             saveDom.onclick = function() {
                 window.localStorage.
                     setItem('translati0n', JSON.stringify(options));
+                    alert('saved successful!');
             };
         }
     };
