@@ -504,6 +504,16 @@
                     if (reg.test(e.dataTransfer.getData('text/html'))) {
                         wrapper.style.top = e.pageY - relativeY + 'px';
                         wrapper.style.left = e.pageX - relativeX + 'px';
+
+                        // update icon position after dropped
+                        // because the wrapper position is based on icon position
+                        var position = base.mousePosition(e);
+                        base.icon.mousePosition = {
+                            x: position.x - relativeX + base.iconOffsetX,
+                            y: position.y - relativeY + base.iconOffsetY,
+                            clientX: position.clientX - relativeX + base.iconOffsetX,
+                            clientY: position.clientY - relativeY + base.iconOffsetY
+                        };
                     }
                 });
             }
@@ -591,7 +601,7 @@
                 }
 
                 // get options
-                base.getOptinos();
+                base.getOptions();
 
                 // check if click on translation icon
                 if (target.id === icon.id) {
@@ -713,7 +723,7 @@
 
             return text;
         },
-        getOptinos: function() {
+        getOptions: function() {
             var base = this;
             var d = base.defaults;
             chrome.extension.sendRequest(
@@ -732,6 +742,7 @@
             var base = this;
             var d = base.defaults;
             // check if text is the same as last text
+            // lastTtext always be empty, see: function setOptions
             if (text === base.lastText) {
                 if (base.immediately) {
                     base.showWrapper();
