@@ -5,9 +5,6 @@
     "extDescription": {
         "message": "Translation+ for chrome"
     },
-    "button_save": {
-        "message": "Save"
-    },
     "options_menu_general": {
         "message": "General+ en"
     },
@@ -17,14 +14,26 @@
     "general_apis": {
         "message": "Available APIs"
     },
-    "general_apis_tip": {
-        "message": "Dict.cn is friendly for Chinese, Google Translate support a lot of languages."
-    },
     "general_apis_google_translate": {
         "message": "Google Translate"
     },
+    "general_apis_google_translate_tip": {
+        "message": "google tip"
+    },
+    "general_apis_google_translate_source": {
+        "message": "From :"
+    },
+    "general_apis_google_translate_target": {
+        "message": "To :"
+    },
+    "general_apis_google_translate_detect": {
+        "message": "Detect Language"
+    },
     "general_apis_dict_cn": {
         "message": "Dict.cn"
+    },
+    "general_apis_dict_cn_tip": {
+        "message": "dict cn tip"
     },
     "general_immediately": {
         "message": "Show floating icon."

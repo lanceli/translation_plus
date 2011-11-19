@@ -43,12 +43,6 @@
         text-shadow: rgba(255,255,255,1) 0px 0px 20px;
     }
     
-    #apiContainer {
-        display: inline-block;
-    }
-    #googleOptions {
-        display: inline-block;
-    }
     #optionsContainer {
         width: 500px;
         position: absolute;
@@ -81,7 +75,6 @@
     }
     .label,
     .label + * {
-        display: inline-block;
         vertical-align: middle;
     }
     </style>
@@ -89,66 +82,64 @@
 <body>
 <div id="main">
     <ul id="menu">
-    <li class="active" data-tab="general" data-localization="options_menu_general" >General</li>
-    <li data-tab="advanced" data-localization="options_menu_advanced" >Advanced</li>
+    <li class="active" data-tab="general" data-localization="options_menu_general">General</li>
+    <li data-tab="advanced" data-localization="options_menu_advanced">Advanced</li>
     </ul>
     <div id="optionsContainer">
     <div id="general">
     <div class="option_row">
-        <div id="apiContainer">
-            <label class="label" data-localization="general_apis" > Apis: </label>
-            <div class="option_picker">
-            <select id="api" multiple>
-                <option value="google" data-localization="general_apis_google_translate" >Google Translate</option>
-                <option value="dictCn" data-localization="general_apis_dict_cn" >dictCN</option>
-            </select>
-            </div>
-        </div>
+        <label class="label" data-localization="general_apis"> Apis: </label>
+    </div>
+    <div class="option_row">
+        <input class="api" value="dictCn" type="checkbox" id="dictcn"/>
+        <label class="label" data-localization="general_apis_dict_cn"></label>
+        <div class="tip" data-localization="general_apis_dict_cn_tip">tip</div>
+    </div>
+    <div class="option_row">
+        <input class="api" value="google" type="checkbox" id="google"/>
+        <label class="label" data-localization="general_apis_google_translate"></label>
         <div id="googleOptions">
-            <label class="label"> From: </label>
+            <label class="label" data-localization="general_apis_google_translate_source"> From: </label>
             <select id="source">
-                <option value="detect">Detect Language</option>
+                <option value="detect" data-localization="general_apis_google_translate_detect">Detect Language</option>
             </select>
-            <label class="label"> To: </label>
+            <label class="label" data-localization="general_apis_google_translate_target"> To: </label>
             <select id="target">
             </select>
         </div>
-        <div class="tip" data-localization="general_apis_tip" >tip</div>
+        <div class="tip" data-localization="general_apis_google_translate_tip">tip</div>
     </div>
     <div class="option_row">
         <input type="checkbox" name="immediately" id="immediately"/>
-        <label class="label" data-localization="general_immediately" > Immediately: </label>
+        <label class="label" data-localization="general_immediately"> Immediately: </label>
         <div id="immediatelyWithKey">
             <select id="immediatelyKey">
                 <option value="ctrlKey">Ctrl</option>
                 <option value="altKey">Alt</option>
                 <option value="shiftKey">Shift</option>
             </select>
-            <label class="label" data-localization="general_immediately_shortcut" > Immediately with key down: </label>
+            <label class="label" data-localization="general_immediately_shortcut"> Immediately with key down: </label>
         </div>
-        <div class="tip" data-localization="general_immediately_tip" >tip</div>
+        <div class="tip" data-localization="general_immediately_tip">tip</div>
     </div>
     </div>
     <div id="advanced">
         <div class="option_row">
-            <label class="label" data-localization="advanced_icon_opacity" > icon opacity: </label>
+            <label class="label" data-localization="advanced_icon_opacity"> icon opacity: </label>
             <input type="range" name="iconOpacity" id="iconOpacity" min="0" max="10" step="1"/>
             <img id="iconDemo" src="../images/translati0n_icon.png"/>
-            <div class="tip" data-localization="advanced_icon_opacity_tip" >tip</div>
+            <div class="tip" data-localization="advanced_icon_opacity_tip">tip</div>
         </div>
         <div class="option_row">
             <input type="checkbox" name="draggable" id="draggable"/>
-            <label class="label" data-localization="advanced_draggable" > draggable </label>
-            <div class="tip" data-localization="advanced_draggable_tip" >tip</div>
+            <label class="label" data-localization="advanced_draggable"> draggable </label>
+            <div class="tip" data-localization="advanced_draggable_tip">tip</div>
         </div>
         <div class="option_row">
             <input type="checkbox" name="dbclick" id="dbclick"/>
-            <label class="label" data-localization="advanced_dbclick" > Dbclick: </label>
-            <div class="tip" data-localization="advanced_dbclick_tip" >tip</div>
+            <label class="label" data-localization="advanced_dbclick"> Dbclick: </label>
+            <div class="tip" data-localization="advanced_dbclick_tip">tip</div>
         </div>
-    </div>
-    <div class="option_row">
-        <button id="save" data-localization="button_save" >Save</button>
     </div>
     </div>
     <a id="genius" href="http://lanceli.com">made@Lance</a>
@@ -161,7 +152,8 @@
     var translati0n = {
         menuDom: t$('menu'),
         apiDom: t$('api'),
-        saveDom: t$('save'),
+        dictcnDom: t$('dictcn'),
+        googleDom: t$('google'),
         dbclickDom: t$('dbclick'),
         googleOptionsDom: t$('googleOptions'),
         sourceDom: t$('source'),
@@ -178,7 +170,6 @@
             base.defaults = options;
             base.setLocalizedTopic();
             base.restoreOptions();
-            base.saveOptions();
         },
         setLocalizedTopic: function() {
             var base = this;
@@ -195,38 +186,37 @@
             var options = base.defaults;
 
             // api
-            var apiDom = base.apiDom;
-            for (var i = 0; i < apiDom.children.length; i++) {
-                var child = apiDom.children[i];
+            var apisDom = document.getElementsByClassName('api');
+            for (var i = 0; i < apisDom.length; i++) {
+                var apiDom = apisDom[i];
                 for (var j = 0; j < options.api.length; j++) {
-                    if (child.value == options.api[j]) {
-                        child.selected = "true";
-                        break;
+                    if (apiDom.value == options.api[j]) {
+                        apiDom.checked = "checked";
                     }
                 }
+                apiDom.onclick = function() {
+                    var apis = [];
+                    if (document.querySelectorAll('.api:checked').length == 0) {
+                        alert('At last have one api');
+                        this.checked = "checked";
+                        return;
+                    }
+                    for (var n = 0; n < apisDom.length; n++) {
+                        if (apisDom[n].checked) {
+                            apis.push(apisDom[n].value);
+                        }
+                    }
+                    options.api = apis;
+                    base.save();
+                };
             }
-            apiDom.onchange = function() {
-                var children = this.children;
-                var api = [];
-                for (var i = 0; i< children.length; i++) {
-                    if (children[i].selected) {
-                        api.push(children[i].value);
-                    }
-                }
-
-                if (apiDom.options[0].selected) {
-                    base.googleOptionsDom.style.display = 'inline-block';
-                } else {
-                    base.googleOptionsDom.style.display = 'none';
-                }
-                options.api = api;
-            };
 
             // dbclick
             var dbclickDom = base.dbclickDom;
             dbclickDom.checked = options.dbclick;
             dbclickDom.onclick = function() {
                 options.dbclick = this.checked;
+                base.save();
             };
 
             // draggable
@@ -234,6 +224,7 @@
             draggableDom.checked = options.draggable;
             draggableDom.onclick = function() {
                 options.dbclick = this.checked;
+                base.save();
             };
 
             // immediately 
@@ -243,6 +234,7 @@
             immediatelyDom.onclick = function() {
                 options.immediately = this.checked;
                 base.immediatelyWithKeyDom.style.display = !options.immediately ? 'none' : 'inline-block';
+                base.save();
             };
 
             // immediately key
@@ -256,6 +248,7 @@
             }
             immediatelyKeyDom.onchange = function() {
                 options.immediatelyWithKey = this.value;
+                base.save();
             };
 
             // menu
@@ -281,19 +274,15 @@
                 iconDemo.style.opacity = 
                     options.icon.opacityLeave = 
                     parseInt(this.value, 10) / 10;
+                base.save();
             };
 
         },
-        saveOptions: function() {
+        save: function() {
             var base = this;
-            var saveDom = base.saveDom;
             var options = base.defaults;
-            // save button
-            saveDom.onclick = function() {
-                window.localStorage.
-                    setItem('translati0n', JSON.stringify(options));
-                    alert('saved successful!');
-            };
+            window.localStorage.
+                setItem('translati0n', JSON.stringify(options));
         }
     };
     var translati0nOptions = window.localStorage.getItem('translati0n');
@@ -308,46 +297,45 @@
     }
 
     // get supported language
-    chrome.extension.sendRequest({supported: 'google'}, function(response) {
-        // TODO create selete language dropdown
-        var base = this;
-        var sourceDom = translati0n.sourceDom;
-        var targetDom = translati0n.targetDom;
-        if (typeof response.languages === 'object') {
-            var languages = response.languages;
-            for (var i = 0; i < languages.length; i++) {
-                var newOpt = new Option(languages[i].language, languages[i].language);
-                targetDom.options[i] = newOpt.cloneNode(true);
-                sourceDom.options[i+1] = newOpt;
-            }
-
-            var options = translati0n.defaults;
-            // google source
-            for (var i = 0; i < sourceDom.children.length; i++) {
-                var child = sourceDom.children[i];
-                if (child.value == options.google.source) {
-                    child.selected = "true";
-                    break;
-                }
-            }
-            sourceDom.onchange = function() {
-                options.google.source = this.value;
-            };
-
-            // google traget
-            for (var i = 0; i < targetDom.children.length; i++) {
-                var child = targetDom.children[i];
-                if (child.value == options.google.target) {
-                    child.selected = "true";
-                    break;
-                }
-            }
-            targetDom.onchange = function() {
-                options.google.target = this.value;
-            };
+    var lang = {};
+    lang.en = {"af":"Afrikaans","sq":"Albanian","ar":"Arabic","be":"Belarusian","bg":"Bulgarian","ca":"Catalan","zh":"Chinese (Simplified)","zh-TW":"Chinese (Traditional)","hr":"Croatian","cs":"Czech","da":"Danish","nl":"Dutch","en":"English","et":"Estonian","tl":"Filipino","fi":"Finnish","fr":"French","gl":"Galician","de":"German","el":"Greek","ht":"Haitian Creole","iw":"Hebrew","hi":"Hindi","hu":"Hungarian","is":"Icelandic","id":"Indonesian","ga":"Irish","it":"Italian","ja":"Japanese","ko":"Korean","lv":"Latvian","lt":"Lithuanian","mk":"Macedonian","ms":"Malay","mt":"Maltese","no":"Norwegian","fa":"Persian","pl":"Polish","pt":"Portuguese","ro":"Romanian","ru":"Russian","sr":"Serbian","sk":"Slovak","sl":"Slovenian","es":"Spanish","sw":"Swahili","sv":"Swedish","th":"Thai","tr":"Turkish","uk":"Ukrainian","vi":"Vietnamese","cy":"Welsh","yi":"Yiddish"};
+    lang.zh_CN = {"sq":"阿尔巴尼亚语","ar":"阿拉伯语","ga":"爱尔兰语","et":"爱沙尼亚语","be":"白俄罗斯语","bg":"保加利亚语","is":"冰岛语","pl":"波兰语","fa":"波斯语","af":"布尔语(南非荷兰语)","da":"丹麦语","de":"德语","ru":"俄语","fr":"法语","tl":"菲律宾语","fi":"芬兰语","ht":"海地克里奥尔语","ko":"韩语","nl":"荷兰语","gl":"加利西亚语","ca":"加泰罗尼亚语","cs":"捷克语","hr":"克罗地亚语","lv":"拉脱维亚语","lt":"立陶宛语","ro":"罗马尼亚语","mt":"马耳他语","ms":"马来语","mk":"马其顿语","no":"挪威语","pt":"葡萄牙语","ja":"日语","sv":"瑞典语","sr":"塞尔维亚语","sk":"斯洛伐克语","sl":"斯洛文尼亚语","sw":"斯瓦希里语","th":"泰语","tr":"土耳其语","cy":"威尔士语","uk":"乌克兰语","iw":"希伯来语","el":"希腊语","es":"西班牙语","hu":"匈牙利语","it":"意大利语","yi":"意第绪语","hi":"印地语","id":"印尼语","en":"英语","vi":"越南语","zh-TW":"中文(繁体)","zh":"中文(简体)"};
+    var sourceDom = translati0n.sourceDom;
+    var targetDom = translati0n.targetDom;
+        var locale = chrome.i18n.getMessage('@@ui_locale');
+        var languages =  lang['locale'] == 'zh_CN' ? lang['locale'] : lang.en;
+        var i = 0;
+        for (code in languages) {
+            var newOpt = new Option(languages[code], code);
+            targetDom.options[i] = newOpt.cloneNode(true);
+            sourceDom.options[i+1] = newOpt;
+            i++;
         }
-        console.log(response);
-    });
+
+        var options = translati0n.defaults;
+        // google source
+        for (var i = 0; i < sourceDom.children.length; i++) {
+            var child = sourceDom.children[i];
+            if (child.value == options.google.source) {
+                child.selected = "true";
+                break;
+            }
+        }
+        sourceDom.onchange = function() {
+            options.google.source = this.value;
+        };
+
+        // google traget
+        for (var i = 0; i < targetDom.children.length; i++) {
+            var child = targetDom.children[i];
+            if (child.value == options.google.target) {
+                child.selected = "true";
+                break;
+            }
+        }
+        targetDom.onchange = function() {
+            options.google.target = this.value;
+        };
 })();
 </script>
 </body>
