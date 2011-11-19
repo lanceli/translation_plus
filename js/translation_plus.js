@@ -24,8 +24,8 @@
                 'dictCn', 'google'
             ],
             google: {
-                target: 'detect',
-                source: 'zh'
+                target: 'zh',
+                source: 'detect'
             },
             icon: {
                 name: 'icon',
