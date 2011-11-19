@@ -78,7 +78,7 @@
                 d = base.defaults;
 
             // detect Mac OS
-            if (/Mac/.text(window.navigator.platform)) {
+            if (/Mac/.test(window.navigator.platform)) {
                 d.immediatelyWithKey = ['altKey'];
             }
 

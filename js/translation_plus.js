@@ -353,6 +353,10 @@
             var base = this,
                 wrapper = base.wrapper;
 
+            // reset current selected text if user disappear the wrapper
+            // prevent slow api display hidden wrapper again, see: function sendRequest
+            base.selectedText = '';
+
             // hide wrapper
             if (wrapper.style.top !== base.hidden) {
                 wrapper.style.top = base.hidden;
@@ -757,6 +761,8 @@
             chrome.extension.sendRequest(params,
                 function(response) {
                     if (typeof response.sugg === 'undefined') {
+
+                        // do nothing if response text is different with current selected text
                         if (response.selectedText !== base.selectedText) {
                             return;
                         }
