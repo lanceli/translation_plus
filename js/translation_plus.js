@@ -14,17 +14,17 @@
             enabled: true,
             immediately: false, // translate immediately without icon
             immediatelyWithKey: [ // if immediately is false and with key down, show translation 
-                'altKey'
+                'ctrlKey'
             ], 
             selectText: true, // work on selection text
             dbclick: true, // work on dbclick
             draggable: true,
             suggestible: true,
             api: [ // support multi api
-                'dictCn'
+                'dictCn', 'google'
             ],
             google: {
-                target: 'en',
+                target: 'detect',
                 source: 'zh'
             },
             icon: {
